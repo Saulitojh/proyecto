@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendaciones de Música</title>
+</head>
+<body>
+    <h1>Recomendaciones de Música</h1>
+    {% for cancion, recomendaciones in recomendaciones.items() %}
+        <h2>Para la canción: {{ cancion }}</h2>
+        <ul>
+            {% for recomendacion in recomendaciones %}
+                <li>{{ recomendacion['nombre'] }} - {{ recomendacion['artista'][0] }}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+    <a href="/">Volver</a>
+</body>
+</html>

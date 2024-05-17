@@ -1,20 +1,15 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Canciones</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <title>Recomendador de Música</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Lista de Canciones</h1>
-        <ul>
-            {% for cancion in canciones %}
-            <li><a href="{{ url_for('obtener_cancion_por_id_vista', id=cancion.id) }}">{{ cancion.titulo }}</a> - {{ cancion.artista }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+    <h1>Ingresa tus canciones favoritas</h1>
+    <form action="/recomendar" method="POST">
+        <input type="text" name="cancion" placeholder="Canción - Artista" required>
+        <button type="submit">Obtener Recomendaciones</button>
+    </form>
 </body>
 </html>

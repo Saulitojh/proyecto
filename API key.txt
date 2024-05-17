@@ -1,0 +1,4 @@
+Application name	RItmoAPI
+API key	36c3b174617c3d2c2da5188febf39980
+Shared secret	fe502270597c55dd27c3e60be66a781b
+Registered to	Saulitojh

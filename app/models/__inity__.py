@@ -1,0 +1,1 @@
+# Este archivo se utilizará para definir los modelos de datos en el futuro.
