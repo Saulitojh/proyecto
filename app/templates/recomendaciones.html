@@ -4,17 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recomendaciones de Música</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            color: #e0e0e0;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .column {
+            flex: 1;
+            background: url('https://th.bing.com/th/id/OIG3.1jl1N6F8g4Nbb0qmQ2yu?pid=ImgGn') no-repeat center center;
+            background-size: cover;
+        }
+        .main-content {
+            flex: 3;
+            background-color: #1f1f1f;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #e0e0e0;
+        }
+        .recomendacion-container {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin: 10px 0;
+            width: 100%;
+            max-width: 600px;
+        }
+        h2 {
+            color: #99acc0;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #333;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            color: #e0e0e0;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #99acc0;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        a:hover {
+            background-color: #db4c7c;
+            transform: scale(1.05);
+        }
+        .pedro {
+            width: 200px;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Recomendaciones de Música</h1>
-    {% for cancion, recomendaciones in recomendaciones.items() %}
-        <h2>Para la canción: {{ cancion }}</h2>
-        <ul>
-            {% for recomendacion in recomendaciones %}
-                <li>{{ recomendacion['nombre'] }} - {{ recomendacion['artista'][0] }}</li>
+    <div class="container">
+        <div class="column"></div>
+        <div class="main-content">
+            <h1>Recomendaciones de Música</h1>
+            <img src="https://media.tenor.com/nIoV8E6Uc14AAAAj/racoonok.gif" alt="PedroAprueba" class="pedro">
+            {% for cancion, recomendaciones in recomendaciones.items() %}
+                <div class="recomendacion-container">
+                    <h2>Para la canción: {{ cancion }}</h2>
+                    <ul>
+                        {% for recomendacion in recomendaciones %}
+                            <li>{{ recomendacion['nombre'] }} - {{ recomendacion['artista'][0] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endfor %}
-        </ul>
-    {% endfor %}
-    <a href="/">Volver</a>
+            <a href="/">Volver</a>
+        </div>
+        <div class="column"></div>
+    </div>
 </body>
 </html>
