@@ -1,55 +1,68 @@
 import requests
+import random
 
-API_KEY = '36c3b174617c3d2c2da5188febf39980'
+API_KEY = '36c3b174617c3d2c2da5188febf39980'  # Reemplaza esto con tu API key de Last.fm
+BASE_URL = 'http://ws.audioscrobbler.com/2.0/'
 
 def buscar_informacion_cancion(nombre_cancion, nombre_artista):
-    url = 'http://ws.audioscrobbler.com/2.0/'
+    """
+    Busca información de una canción específica utilizando la API de Last.fm.
+    """
     params = {
         'method': 'track.getInfo',
-        'track': nombre_cancion,
-        'artist': nombre_artista,
         'api_key': API_KEY,
+        'artist': nombre_artista,
+        'track': nombre_cancion,
         'format': 'json'
     }
-    response = requests.get(url, params=params)
+
+    response = requests.get(BASE_URL, params=params)
+    print("Respuesta de Last.fm:", response.status_code, response.text)  # Depuración
     if response.status_code == 200:
         data = response.json()
-        track_info = data.get('track', {})
-        if track_info:
-            info = {
-                'nombre': track_info.get('name', 'Desconocido'),
-                'artista': [track_info.get('artist', {}).get('name', 'Desconocido')],
-                'album': track_info.get('album', {}).get('title', 'Desconocido'),
-                'url': track_info.get('url', '#'),
+        if 'track' in data:
+            return {
+                'nombre': data['track']['name'],
+                'artista': [data['track']['artist']['name']]
             }
-            return info
-        else:
-            return None
-    else:
-        return None
+    return None
 
-def calcular_similitud_entre_canciones(artistas_cancion1, cancion2):
-    artistas_cancion2 = cancion2['artista']
-    artistas_coincidentes = set(artistas_cancion1).intersection(artistas_cancion2)
-    similitud = len(artistas_coincidentes) / len(artistas_cancion1) if len(artistas_cancion1) > 0 else 0
-    return similitud
+def calcular_similitud(canciones_info, todas_las_canciones):
+    """
+    Calcula la similitud entre las canciones favoritas del usuario y una lista de todas las canciones disponibles.
+    """
+    similitudes = []
 
-def calcular_similitud(canciones_favoritas, todas_las_canciones, num_recomendaciones=4):
-    recomendaciones_por_cancion = {}
-    for cancion_favorita in canciones_favoritas:
-        artistas_cancion_favorita = cancion_favorita['artista']
-        similitudes = []
-        for otra_cancion in todas_las_canciones:
-            if otra_cancion != cancion_favorita:
-                similitud = calcular_similitud_entre_canciones(artistas_cancion_favorita, otra_cancion)
-                similitudes.append((otra_cancion, similitud))
-        similitudes = sorted(similitudes, key=lambda x: x[1], reverse=True)[:num_recomendaciones]
-        recomendaciones_por_cancion[cancion_favorita['nombre']] = similitudes
-    return recomendaciones_por_cancion
+    for cancion_info in canciones_info:
+        for cancion in todas_las_canciones:
+            similitud = some_similarity_metric(cancion_info, cancion)
+            similitudes.append({
+                'nombre': cancion['nombre'],
+                'artista': cancion['artista'],
+                'similitud': similitud
+            })
 
-def obtener_recomendaciones(similitudes_por_cancion, num_recomendaciones=4):
-    recomendaciones = {}
-    for cancion, similitudes in similitudes_por_cancion.items():
-        mejores_recomendaciones = [cancion_similar[0] for cancion_similar in similitudes[:num_recomendaciones]]
-        recomendaciones[cancion] = mejores_recomendaciones
-    return recomendaciones
+    return similitudes
+
+def some_similarity_metric(cancion_info, cancion):
+    """
+    Métrica simple de similitud entre dos canciones. En este ejemplo, se utiliza un valor aleatorio.
+    """
+    return random.random()
+
+def obtener_recomendaciones(similitudes, num_recomendaciones=4):
+    """
+    Ordena las canciones por similitud y devuelve recomendaciones únicas.
+    """
+    recomendaciones_ordenadas = sorted(similitudes, key=lambda x: x['similitud'], reverse=True)
+    recomendaciones_unicas = []
+    nombres_vistos = set()
+
+    for recomendacion in recomendaciones_ordenadas:
+        if len(recomendaciones_unicas) >= num_recomendaciones:
+            break
+        if recomendacion['nombre'] not in nombres_vistos:
+            recomendaciones_unicas.append(recomendacion)
+            nombres_vistos.add(recomendacion['nombre'])
+
+    return recomendaciones_unicas
