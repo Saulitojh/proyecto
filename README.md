@@ -29,4 +29,4 @@ Configurar
     export FLASK_ENV=development
 Ejecutar la aplicacion
  
-	run flask
+	flask run 
