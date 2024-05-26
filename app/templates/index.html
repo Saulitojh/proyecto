@@ -4,12 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recomendador de Música</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            color: #e0e0e0;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .column {
+            flex: 1;
+            background: url('https://th.bing.com/th/id/OIG3.1jl1N6F8g4Nbb0qmQ2yu?pid=ImgGn') no-repeat center center;
+            background-size: cover;
+        }
+        .main-content {
+            flex: 3;
+            background-color: #000000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #e0e0e0;
+        }
+        form {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: calc(100% - 22px);
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #333;
+            color: #e0e0e0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #99acc0;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background-color: #db4c7c;
+            transform: scale(1.05);
+        }
+        .pedro {
+            width: 200px;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Ingresa tus canciones favoritas</h1>
-    <form action="/recomendar" method="POST">
-        <input type="text" name="cancion" placeholder="Canción - Artista" required>
-        <button type="submit">Obtener Recomendaciones</button>
-    </form>
+    <div class="container">
+        <div class="column"></div>
+        <div class="main-content">
+            <h1>Ingresa tus canciones favoritas</h1>
+            <img src="https://media1.tenor.com/m/ZAMoMuQgf9UAAAAC/mapache-pedro.gif" alt="Pedro" class="pedro">
+            <form action="/recomendar" method="POST">
+                <input type="text" name="cancion" placeholder="Canción - Artista" required>
+                <button type="submit">Obtener Recomendaciones</button>
+            </form>
+        </div>
+        <div class="column"></div>
+    </div>
 </body>
 </html>
