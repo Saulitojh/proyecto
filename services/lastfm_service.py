@@ -27,42 +27,29 @@ def buscar_informacion_cancion(nombre_cancion, nombre_artista):
             }
     return None
 
-def calcular_similitud(canciones_info, todas_las_canciones):
+def obtener_canciones_similares(nombre_cancion, nombre_artista, limit=10):
     """
-    Calcula la similitud entre las canciones favoritas del usuario y una lista de todas las canciones disponibles.
+    Obtiene una lista de canciones similares a una canción específica utilizando la API de Last.fm.
     """
-    similitudes = []
+    params = {
+        'method': 'track.getsimilar',
+        'artist': nombre_artista,
+        'track': nombre_cancion,
+        'api_key': API_KEY,
+        'format': 'json',
+        'limit': limit
+    }
 
-    for cancion_info in canciones_info:
-        for cancion in todas_las_canciones:
-            similitud = some_similarity_metric(cancion_info, cancion)
-            similitudes.append({
-                'nombre': cancion['nombre'],
-                'artista': cancion['artista'],
-                'similitud': similitud
-            })
-
-    return similitudes
-
-def some_similarity_metric(cancion_info, cancion):
-    """
-    Métrica simple de similitud entre dos canciones. En este ejemplo, se utiliza un valor aleatorio.
-    """
-    return random.random()
-
-def obtener_recomendaciones(similitudes, num_recomendaciones=4):
-    """
-    Ordena las canciones por similitud y devuelve recomendaciones únicas.
-    """
-    recomendaciones_ordenadas = sorted(similitudes, key=lambda x: x['similitud'], reverse=True)
-    recomendaciones_unicas = []
-    nombres_vistos = set()
-
-    for recomendacion in recomendaciones_ordenadas:
-        if len(recomendaciones_unicas) >= num_recomendaciones:
-            break
-        if recomendacion['nombre'] not in nombres_vistos:
-            recomendaciones_unicas.append(recomendacion)
-            nombres_vistos.add(recomendacion['nombre'])
-
-    return recomendaciones_unicas
+    response = requests.get(BASE_URL, params=params)
+    print("Respuesta de Last.fm para canciones similares:", response.status_code, response.text)  # Depuración
+    if response.status_code == 200:
+        data = response.json()
+        if 'similartracks' in data and 'track' in data['similartracks']:
+            canciones_similares = []
+            for track in data['similartracks']['track']:
+                canciones_similares.append({
+                    'nombre': track['name'],
+                    'artista': [track['artist']['name']]
+                })
+            return canciones_similares
+    return None

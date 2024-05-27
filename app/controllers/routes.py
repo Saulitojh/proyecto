@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from services.lastfm_service import buscar_informacion_cancion, calcular_similitud, obtener_recomendaciones
+from services.lastfm_service import buscar_informacion_cancion, obtener_canciones_similares
 
 bp = Blueprint('main', __name__)
 
@@ -17,36 +17,19 @@ def recomendar():
     
     canciones_favoritas = data.get('canciones_favoritas', [])
     print("Canciones favoritas:", canciones_favoritas)  # Depuración
-    canciones_info = []
+    recomendaciones_finales = []
     
     for cancion in canciones_favoritas:
         try:
             nombre_cancion, nombre_artista = cancion.split(' - ')
-            print(f"Buscando información para: {nombre_cancion} - {nombre_artista}")  # Depuración
-            info_cancion = buscar_informacion_cancion(nombre_cancion, nombre_artista)
-            if info_cancion:
-                canciones_info.append(info_cancion)
-                print("Información de la canción encontrada:", info_cancion)  # Depuración
+            print(f"Buscando canciones similares para: {nombre_cancion} - {nombre_artista}")  # Depuración
+            canciones_similares = obtener_canciones_similares(nombre_cancion, nombre_artista)
+            if canciones_similares:
+                recomendaciones_finales.extend(canciones_similares)
+                print("Canciones similares encontradas:", canciones_similares)  # Depuración
         except ValueError:
             print(f"Formato incorrecto para la canción: {cancion}")  # Depuración
             return jsonify({'error': f'Formato incorrecto para la canción: {cancion}'}), 400
-
-    todas_las_canciones = [
-        {'nombre': 'Song 1', 'artista': ['Artist A']},
-        {'nombre': 'Song 2', 'artista': ['Artist B']},
-        {'nombre': 'Song 3', 'artista': ['Artist C']},
-        {'nombre': 'Song 4', 'artista': ['Artist D']},
-        # Agrega aquí más canciones posibles para las recomendaciones
-    ]
-
-    print("Calculando similitudes...")  # Depuración
-    similitudes = calcular_similitud(canciones_info, todas_las_canciones)
-    print("Similitudes calculadas:", similitudes)  # Depuración
-
-    # Obtener múltiples recomendaciones únicas
-    recomendaciones_finales = []
-    for cancion_info in canciones_info:
-        recomendaciones_finales.extend(obtener_recomendaciones(similitudes, num_recomendaciones=4))
 
     # Eliminar duplicados en la lista final
     recomendaciones_unicas = []
