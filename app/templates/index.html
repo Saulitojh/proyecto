@@ -44,7 +44,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.5);
             text-align: center;
         }
-        input[type="text"] {
+        input[type="text"], textarea {
             padding: 10px;
             margin: 10px 0;
             width: calc(100% - 22px);
@@ -78,12 +78,38 @@
         <div class="main-content">
             <h1>Ingresa tus canciones favoritas</h1>
             <img src="https://media1.tenor.com/m/ZAMoMuQgf9UAAAAC/mapache-pedro.gif" alt="Pedro" class="pedro">
-            <form action="/recomendar" method="POST">
-                <input type="text" name="cancion" placeholder="Canción - Artista" required>
+            <form id="recomendacion-form">
+                <label for="canciones">Canciones favoritas (formato: "Nombre - Artista"):</label><br>
+                <textarea id="canciones" name="canciones" rows="4" cols="50" required></textarea><br>
                 <button type="submit">Obtener Recomendaciones</button>
             </form>
+            <h2>Recomendaciones</h2>
+            <div id="recomendaciones"></div>
+            <a href="/playlist"><button>Ver Playlist</button></a>
         </div>
         <div class="column"></div>
     </div>
+    <script>
+        document.getElementById('recomendacion-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const canciones = document.getElementById('canciones').value.split('\n').map(c => c.trim());
+            fetch('/recomendar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ canciones_favoritas: canciones })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const recomendacionesDiv = document.getElementById('recomendaciones');
+                recomendacionesDiv.innerHTML = '';
+                data.forEach(cancion => {
+                    const p = document.createElement('p');
+                    p.textContent = `${cancion.nombre} - ${cancion.artista.join(', ')}`;
+                    recomendacionesDiv.appendChild(p);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
